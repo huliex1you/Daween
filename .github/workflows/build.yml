@@ -26,12 +26,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci || npm install
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+          if [ -f "package.json" ]; then
+            npm install
+          else
+            npm init -y
+            npm install @capacitor/core @capacitor/cli @capacitor/android
+          fi
 
-      - name: Build Web and Add/Sync Android Platform
+      - name: Initialize & Add Android Platform
         run: |
-          npm run build --if-present
+          npx cap init "Dawwin" "com.dawwin.app" --web-dir www || true
           if [ ! -d "android" ]; then
             npx cap add android
           fi
