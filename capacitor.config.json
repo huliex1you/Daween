@@ -1,0 +1,7 @@
+{
+  "appId": "com.masarefi.app",
+  "appName": "دوّن",
+  "webDir": "www",
+  "backgroundColor": "#f2f5f7",
+  "server": { "androidScheme": "https" }
+}
