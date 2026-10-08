@@ -1,5 +1,4 @@
 
-100‎%‎
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -592,6 +591,24 @@ body{font-weight:500;-webkit-font-smoothing:antialiased;text-rendering:optimizeL
 #mylogo{position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
 #mylogo.holding5::after{content:'';position:absolute;inset:-5px;border-radius:16px;border:3px solid #a78bfa;animation:hold5 5s linear forwards}
 @keyframes hold5{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+/* ===== v21: الإيماءات ===== */
+#gback{position:fixed;z-index:99;height:120px;width:var(--w,0);display:flex;align-items:center;justify-content:center;color:#fff;pointer-events:none;opacity:0;transition:opacity .15s}
+#gback.on{opacity:1}
+#gback.l{left:0}#gback.r{right:0}
+#gback .gb{position:absolute;inset:0;background:rgba(15,23,42,.72);transition:background .15s}
+#gback.l .gb{border-radius:0 60px 60px 0/0 50% 50% 0}
+#gback.r .gb{border-radius:60px 0 0 60px/50% 0 0 50%}
+#gback svg{position:relative}
+#gback.arm .gb{background:rgba(37,99,235,.92)}
+#ghome{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);z-index:99;transform:translate(-50%,var(--y,0));display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:99px;background:rgba(15,23,42,.78);color:#fff;font-weight:700;font-size:13px;pointer-events:none;opacity:0;transition:opacity .15s,background .15s}
+#ghome.on{opacity:1}#ghome.arm{background:rgba(37,99,235,.95)}
+#ghint{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);left:12px;right:12px;z-index:96;background:var(--s1);color:var(--tx);border-radius:22px;padding:14px 16px;box-shadow:0 12px 40px rgba(0,0,0,.25);display:none;flex-direction:column;gap:12px;max-width:500px;margin:0 auto}
+#ghint.on{display:flex;animation:up .25s}
+#ghint .ib{position:absolute;top:10px;left:10px}
+.gh-i{display:flex;gap:12px;align-items:center;padding-inline-end:36px}
+.gh-i b{font-size:15px}.gh-i div div{font-size:13px;color:var(--mu)}
+.gh-ic{width:44px;height:44px;border-radius:14px;background:var(--ac-soft);color:var(--ac);display:flex;align-items:center;justify-content:center;flex:none}
+.btn.wa{background:#25D366;color:#fff}
 </style>
 </head>
 <body>
@@ -667,6 +684,7 @@ const IC={
  box:'<rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/>',
  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',
  camera:'<path d="M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="4"/>',
+ wa:'<path d="M3 21l1.6-4.6A8.5 8.5 0 1 1 8 19.5z"/><path d="M9.2 8.5c-.4 2.6 3.3 6.4 6 6l.8-1.6-2-1-1 1c-1-.5-1.8-1.3-2.3-2.3l1-1-1-2z"/>',
  network:'<rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2"/>'
 };
 const svg=(n,s=20)=>'<svg class="i" width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+IC[n]+'</svg>';
@@ -704,7 +722,7 @@ function load(){
 let S=load();
 try{(S.packs||[]).forEach(id=>{const p=PACKS.find(x=>x.id===id);if(!p)return;const lab=p.cats()[0].label;S.categories.forEach(n=>{if(n.label===lab&&!n.pack)n.pack=id})})}catch(e){}
 const saveQ=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}flashSaved()};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}flashSaved();try{schedAutoBk()}catch(e){}};
 let savedT=0;
 function flashSaved(){const el=document.getElementById('saved');if(!el)return;el.textContent='💾 تم الحفظ تلقائياً';el.classList.add('on');clearTimeout(savedT);savedT=setTimeout(()=>el.classList.remove('on'),1400)}
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
@@ -1239,6 +1257,7 @@ function stdRows(d){
 /* ---------- الجولة التعريفية ---------- */
 const TOUR=[
  [null,'مرحباً بك في دوّن 👋','جولة سريعة تعرّفك على التطبيق. يمكنك تخطيها الآن وإعادتها لاحقاً من صفحة الحساب.'],
+ [null,'التنقل بالإيماءات','اسحب من الطرف الأيمن أو الأيسر للشاشة نحو الداخل للرجوع خطوة إلى الخلف، واسحب من أسفل الشاشة (من الشريط السفلي) نحو الأعلى للعودة إلى الرئيسية.'],
  ['#map','المدار','كل دائرة قسم من أقسامك. اضغط أي دائرة لتصبح رئيسية وتظهر فروعها، حتى تصل إلى آخر فرع فيفتح نموذج التعبئة.'],
  ['#map .node[data-i] .bub[data-a=pick]','الضغط المطوّل','اضغط على أي دائرة ثانية كاملة لتظهر خيارات: تعديل، ونقل، وقفل برمز، وتفجير للحذف.'],
  ['#map .bub.ghost','تفريع جديد','أضف تفريعات بأسمائك مع اقتراحات ذكية، أو اختر حزمة جاهزة بتفريعاتها.'],
@@ -1264,7 +1283,7 @@ function tourShow(){
  w.innerHTML=(r?'<i class="t-hole" style="left:'+(r.left-pad)+'px;top:'+(r.top-pad)+'px;width:'+(r.width+pad*2)+'px;height:'+(r.height+pad*2)+'px"></i>':'<i class="t-dim"></i>')
  +'<div class="t-card" style="left:'+left+'px;top:'+top+'px;width:'+cw+'px"><div class="t-step">'+(ui.tour+1)+' / '+TOUR.length+'</div><b>'+st[1]+'</b><p>'+st[2]+'</p><div class="row" style="gap:8px"><button class="btn" data-a="tourEnd">تخطي</button><span class="sp"></span>'+(ui.tour?'<button class="btn" data-a="tourPrev">السابق</button>':'')+'<button class="btn primary" data-a="tourNext">'+(ui.tour===TOUR.length-1?'إنهاء':'التالي')+'</button></div></div>';
 }
-function tourEnd(){const w=$('#tour');if(w)w.remove();ui.tour=null;ui.holding=false;S.settings.tourDone=1;saveQ()}
+function tourEnd(){const w=$('#tour');if(w)w.remove();ui.tour=null;ui.holding=false;S.settings.tourDone=1;S.settings.gestHint=1;saveQ()}
 addEventListener('resize',()=>{if(ui.tour!=null)tourShow()});
 
 /* ---------- v17: عرض الفكرة، نسبة الإنجاز، المنفذة، الحفظ التلقائي، الديون، التقارير المفصلة ---------- */
@@ -1536,7 +1555,8 @@ function debtMap(list,f){
 }
 
 /* ---------- النسخ الاحتياطي: إرسال للبريد وحفظ في الجهاز واستعادة من ملف ---------- */
-const CAP=()=>{try{return window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()?window.Capacitor.Plugins:null}catch(e){return null}};
+const _plg={};
+const CAP=()=>{try{const C=window.Capacitor;if(!C||!C.isNativePlatform||!C.isNativePlatform())return null;const g=n=>_plg[n]||(_plg[n]=(C.Plugins&&C.Plugins[n])||(C.registerPlugin?C.registerPlugin(n):null));return {get Filesystem(){return g('Filesystem')},get Share(){return g('Share')},get App(){return g('App')},get WaShare(){return g('WaShare')}}}catch(e){return null}};
 const bkName=()=>'dawwin-backup-'+today()+'.json';
 async function buildBackup(withFiles){
  const data=JSON.parse(JSON.stringify(S));if(data.settings)delete data.settings.aiKey;
@@ -1578,7 +1598,8 @@ function bkModal(){
  modal('<h3>'+svg('box',18)+' النسخة الاحتياطية</h3><div class="mu sm" style="margin:-6px 0 12px">تُنشأ نسخة كاملة من بياناتك في ملف واحد. مفتاح الذكاء الاصطناعي لا يدخل فيها.</div>'
  +'<label class="fld"><span>البريد الإلكتروني لاستلام النسخة</span><input class="in" id="bk-email" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" value="'+esc(s.bkEmail||'')+'" style="direction:ltr;text-align:start"></label>'
  +'<label class="fck" style="border:0"><input type="checkbox" id="bk-files" checked><span>تضمين المرفقات (الصور والملفات والتسجيلات)</span></label>'
- +'<div class="row" style="gap:8px;margin-top:12px"><button class="btn sp" style="background:#16a34a;color:#fff" data-a="bkSend">'+svg('arrow',16)+' إرسال إلى البريد</button><button class="btn sp" data-a="bkLocal">'+svg('file',16)+' حفظ في الجهاز</button></div>'
+ +'<div class="row" style="gap:8px;margin-top:12px"><button class="btn sp wa" data-a="bkWa">'+svg('wa',16)+' واتساب</button><button class="btn sp" style="background:#16a34a;color:#fff" data-a="bkSend">'+svg('arrow',16)+' البريد</button><button class="btn sp" data-a="bkLocal">'+svg('file',16)+' الجهاز</button></div>'
+ +'<div class="set" style="margin-top:12px"><div style="flex:1"><div style="font-weight:600">نسخ احتياطي تلقائي</div><div class="d" id="ab-st">'+(s.lastAuto?'آخر نسخة تلقائية: '+esc(fmtWhen(s.lastAuto)):'تُحفظ نسخة بعد كل تعديل')+'</div></div><label class="sw"><input type="checkbox" data-c="autoBkTog"'+(s.autoBk!==false?' checked':'')+'><span></span></label></div>'
  +'<div class="mu sm" id="bk-st" style="margin-top:12px;line-height:1.7">عند «إرسال إلى البريد» تُفتح قائمة المشاركة لتختار تطبيق البريد والملف مرفق، والبريد المكتوب أعلاه يُنسخ لتلصقه في خانة «إلى».</div>'
  +'<div class="acts"><button class="btn" data-a="close">إغلاق</button></div>');
 }
@@ -1586,7 +1607,7 @@ function rsModal(){
  ui.bkPend=null;
  modal('<h3>'+svg('box',18)+' استعادة نسخة احتياطية</h3><div class="mu sm" style="margin:-6px 0 12px">اختر ملف النسخة من مكان حفظه: من مرفق البريد بعد تنزيله، أو من ملفات الجهاز، أو من Google Drive.</div>'
  +'<button class="btn primary big" data-a="rsPick">'+svg('clip',18)+' اختيار ملف النسخة</button><input type="file" id="rs-file" accept=".json,application/json,text/plain" hidden data-c="rsFile">'
- +'<div id="rs-info" class="vmeta" style="margin-top:12px;display:none"></div>'
+ +'<div id="rs-info" class="vmeta" style="margin-top:12px;display:none"></div>'+autoListHtml()
  +'<details style="margin-top:12px"><summary class="mu sm" style="cursor:pointer">أو الصق نص النسخة يدوياً</summary><textarea class="in" id="i-data" style="margin-top:8px"></textarea><button class="btn big" style="margin-top:8px" data-a="doImport">استعادة من النص</button></details>'
  +'<div class="acts"><button class="btn" data-a="close">إلغاء</button><button class="btn" id="rs-go" style="background:#16a34a;color:#fff;display:none" data-a="rsGo">استعادة هذه النسخة</button></div>');
 }
@@ -1608,9 +1629,46 @@ function goBack(){
 let backT=0;
 function backOrHint(){if(goBack())return;const now=Date.now();if(now-backT<2000){const cp=CAP();try{if(cp&&cp.App)cp.App.minimizeApp()}catch(e){}backT=0;return}backT=now;toast('أنت في الصفحة الرئيسية. اسحب مرة أخرى لإخفاء التطبيق')}
 /* سحب من حافة الشاشة (يمين أو يسار) للرجوع خطوة */
-let edg=null;
-document.addEventListener('touchstart',e=>{const t=e.touches[0];if(!t)return;if(t.clientX<=18||t.clientX>=innerWidth-18)edg={x:t.clientX,y:t.clientY,l:t.clientX<=18};else edg=null},{passive:true});
-document.addEventListener('touchend',e=>{if(!edg)return;const t=e.changedTouches[0],dx=t.clientX-edg.x,dy=Math.abs(t.clientY-edg.y),ok=edg.l?dx>70:dx<-70;edg=null;if(ok&&dy<80)goBack()},{passive:true});
+/* ---------- التنقل بالإيماءات: سحب من الطرفين للرجوع، ومن الأسفل للأعلى للرئيسية ---------- */
+function goHome(){
+ if($('#rmwrap'))rmClose();if(ui.tour!=null)tourEnd();const r=$('#rpt');if(r)r.remove();if($('#modal').classList.contains('open'))closeModal();
+ ui.ctlOpen=false;ui.view='path';ui.path=[];ui.dwPath=[];ui.myPath=[];ui.dwTab='orbit';ui.vstack=[];render();
+}
+const gOn=()=>S.settings.gest!==false;
+function gEl(id,html){let e=document.getElementById(id);if(!e){e=document.createElement('div');e.id=id;e.innerHTML=html;document.body.appendChild(e)}return e}
+let gs=null;
+document.addEventListener('touchstart',e=>{
+ gs=null;if(!gOn()||e.touches.length!==1)return;const t=e.touches[0],E=24;
+ if(t.clientX<=E||t.clientX>=innerWidth-E)gs={k:'back',l:t.clientX<=E,x:t.clientX,y:t.clientY,d:0};
+ else if(t.clientY>=innerHeight-70)gs={k:'home',x:t.clientX,y:t.clientY,d:0};
+},{passive:true});
+document.addEventListener('touchmove',e=>{
+ if(!gs)return;const t=e.touches[0];
+ if(gs.k==='back'){
+  const d=gs.l?t.clientX-gs.x:gs.x-t.clientX,dy=Math.abs(t.clientY-gs.y);if(dy>d+40&&d<20){gs=null;hideG();return}
+  gs.d=d;if(d<8)return;const b=gEl('gback','<span class="gb"></span>'+svg('chevL',22));
+  b.className='on '+(gs.l?'l':'r')+(d>70?' arm':'');b.style.top=Math.max(10,Math.min(innerHeight-130,t.clientY-60))+'px';b.style.setProperty('--w',Math.min(52,d*.55)+'px');
+ }else{
+  const d=gs.y-t.clientY,dx=Math.abs(t.clientX-gs.x);if(dx>d+40&&d<20){gs=null;hideG();return}
+  gs.d=d;if(d<10)return;const h=gEl('ghome',svg('home',18)+'<span>الرئيسية</span>');
+  h.className='on'+(d>90?' arm':'');h.style.setProperty('--y',(-Math.min(d,140)*.5)+'px');
+ }
+},{passive:true});
+function hideG(){['gback','ghome'].forEach(id=>{const e=document.getElementById(id);if(e)e.className=''})}
+document.addEventListener('touchend',()=>{
+ if(!gs){return}const g=gs;gs=null;hideG();
+ if(g.k==='back'&&g.d>70){ui.noClick=Date.now();try{if(navigator.vibrate)navigator.vibrate(10)}catch(e){}goBack()}
+ else if(g.k==='home'&&g.d>90){ui.noClick=Date.now();try{if(navigator.vibrate)navigator.vibrate(10)}catch(e){}goHome();toast('الرئيسية')}
+},{passive:true});
+document.addEventListener('touchcancel',()=>{gs=null;hideG()},{passive:true});
+/* بطاقة تعريف بالإيماءات تظهر مرة واحدة */
+function gestHint(){
+ if(S.settings.gestHint||!gOn())return;S.settings.gestHint=1;saveQ();
+ const w=gEl('ghint','');
+ w.innerHTML='<button class="ib" data-a="ghClose" aria-label="إغلاق">'+svg('x',18)+'</button><div class="gh-i"><span class="gh-ic">'+svg('back',18)+svg('chevL',18)+'</span><div><b>اسحب من الطرف الأيمن أو الأيسر للشاشة نحو الداخل</b><div>الرجوع خطوة إلى الخلف</div></div></div><div class="gh-i"><span class="gh-ic">'+svg('arrow',18)+'</span><div><b>اسحب من أسفل الشاشة نحو الأعلى</b><div>الرجوع إلى الرئيسية</div></div></div>';
+ w.className='on';setTimeout(()=>{if(w.className==='on')w.className=''},9000);
+}
+
 /* زر الرجوع في أندرويد وإيماءة الرجوع في المتصفح */
 try{const cp=CAP();if(cp&&cp.App&&cp.App.addListener)cp.App.addListener('backButton',()=>backOrHint());else{history.replaceState({r:1},'');history.pushState({d:1},'');addEventListener('popstate',()=>{goBack();history.pushState({d:1},'')})}}catch(e){}
 /* استعادة رمز فقاعة مقفلة في بياناتي (ضغط 5 ثوانٍ على شعار القفل) */
@@ -1627,6 +1685,47 @@ document.addEventListener('pointerdown',e=>{const t=e.target.closest&&e.target.c
 const mlhCancel=()=>{if(mlh){clearTimeout(mlh);mlh=null}const t=$('#mylogo');if(t)t.classList.remove('holding5')};
 document.addEventListener('pointerup',mlhCancel);document.addEventListener('pointercancel',mlhCancel);
 document.addEventListener('contextmenu',e=>{if(e.target.closest&&e.target.closest('#mylogo'))e.preventDefault()});
+
+/* ---------- نسخ احتياطي تلقائي + إرسال عبر واتساب ---------- */
+const BKIDX='masarefi-bk-idx';
+const bkIdx=()=>{try{return JSON.parse(localStorage.getItem(BKIDX)||'[]')}catch(e){return []}};
+let abT=0;
+function schedAutoBk(){if(S.settings.autoBk===false)return;clearTimeout(abT);abT=setTimeout(autoBk,15000)}
+async function autoBk(){
+ if(S.settings.autoBk===false)return;
+ try{
+  const text=await buildBackup(false),now=Date.now(),day='bk-'+today(),blob=new Blob([text],{type:'application/json'});
+  await fput('bk-auto-latest',blob);await fput(day,blob);
+  let idx=bkIdx().filter(x=>x.k!==day&&x.k!=='bk-auto-latest');idx.unshift({k:day,t:now,n:text.length});
+  idx.slice(7).forEach(x=>fdel(x.k));idx=[{k:'bk-auto-latest',t:now,n:text.length}].concat(idx.slice(0,7));
+  localStorage.setItem(BKIDX,JSON.stringify(idx));
+  const cp=CAP();
+  if(cp&&cp.Filesystem){try{
+   await cp.Filesystem.writeFile({path:'dawwin-backups/dawwin-auto-latest.json',data:text,directory:'DOCUMENTS',encoding:'utf8',recursive:true});
+   await cp.Filesystem.writeFile({path:'dawwin-backups/dawwin-auto-'+today()+'.json',data:text,directory:'DOCUMENTS',encoding:'utf8',recursive:true});
+   try{const r=await cp.Filesystem.readdir({path:'dawwin-backups',directory:'DOCUMENTS'});const fs=(r.files||[]).map(f=>typeof f==='string'?f:f.name).filter(n=>/^dawwin-auto-\d{4}-\d\d-\d\d\.json$/.test(n)).sort().reverse();for(const n of fs.slice(7))await cp.Filesystem.deleteFile({path:'dawwin-backups/'+n,directory:'DOCUMENTS'})}catch(e){}
+  }catch(e){}}
+  S.settings.lastAuto=now;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+  const st=$('#ab-st');if(st)st.textContent='آخر نسخة تلقائية: '+fmtWhen(now);
+ }catch(e){}
+}
+async function waSend(withFiles){
+ const text=await buildBackup(withFiles),name=bkName(),msg='نسخة احتياطية من تطبيق دوّن - '+fmtWhen(Date.now());
+ const cp=CAP();
+ if(cp&&cp.Filesystem){
+  const r=await cp.Filesystem.writeFile({path:name,data:text,directory:'CACHE',encoding:'utf8'});
+  if(cp.WaShare){try{await cp.WaShare.share({name,text:msg});return 'wa'}catch(e){const m=String((e&&(e.message||e.code))||'');if(/not_installed/.test(m))toast('واتساب غير مثبت، اختر تطبيقاً آخر من القائمة')}}
+  if(cp.Share){await cp.Share.share({title:msg,text:msg,files:[r.uri],dialogTitle:'أرسل النسخة عبر واتساب'});return 'share'}
+ }
+ try{const file=new File([text],name,{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:msg});return 'share'}}catch(e){if(e&&e.name==='AbortError')return 'cancel'}
+ await saveFileLocal(name,text);
+ try{const w=window.open('https://wa.me/?text='+encodeURIComponent(msg+' — أرفق الملف '+name+' من التنزيلات'),'_blank');if(!w)toast('حُفظ الملف، افتح واتساب وأرفقه')}catch(e){}
+ return 'fallback';
+}
+function autoListHtml(){
+ const idx=bkIdx();if(!idx.length)return '';
+ return '<div class="sech" style="margin:14px 2px 6px">النسخ التلقائية <span class="cnt">'+idx.length+'</span></div>'+idx.map(x=>'<div class="payrow"><span style="flex:1">'+(x.k==='bk-auto-latest'?'<b>آخر نسخة</b> • ':'')+esc(fmtWhen(x.t))+' <span class="mu sm">('+kb(x.n)+')</span></span><button class="btn sm2" data-a="rsAuto" data-k="'+x.k+'">استعادة</button></div>').join('');
+}
 
 /* ---------- خريطة الفقاعات المشتركة ---------- */
 function pbarHtml(c){
@@ -1807,9 +1906,9 @@ function accountView(){
  h+='<label class="fld" style="margin:0"><span>الميزانية الشهرية</span><input class="in num" data-c="budget" inputmode="decimal" data-in="num" value="'+(s.budget||'')+'" placeholder="0"></label></div>';
 
  h+='<div class="card"><h2>الأمان</h2><div class="set"><div style="flex:1"><div style="font-weight:600">رمز قفل من 4 أرقام</div><div class="d">'+(s.pinHash?'مفعّل على هذا الجهاز':'غير مفعّل')+'</div></div>'+(s.pinHash?'<button class="btn danger" style="padding:8px 14px" data-a="pinOff">إيقاف</button>':'')+'<button class="btn" style="padding:8px 14px" data-a="pinSet">'+(s.pinHash?'تغيير':'تفعيل')+'</button></div><div class="mu sm">القفل لحماية الواجهة فقط، والبيانات محفوظة في متصفحك.</div></div>';
- h+='<div class="card"><h2>البيانات</h2><div class="mu sm" style="margin:-4px 0 10px">'+(s.lastBk?'آخر نسخة احتياطية: '+esc(fmtWhen(s.lastBk)):'لم تُنشأ نسخة احتياطية بعد')+(s.bkEmail?' • البريد: <span dir="ltr">'+esc(s.bkEmail)+'</span>':'')+'</div><div class="row"><button class="btn sp" data-a="exportData">'+svg('arrow',16)+' نسخ احتياطي</button><button class="btn sp" data-a="importData">'+svg('clip',16)+' استعادة</button></div><button class="btn danger big" style="margin-top:10px" data-a="resetAll">حذف كل البيانات</button></div>';
+ h+='<div class="card"><h2>البيانات</h2><div class="mu sm" style="margin:-4px 0 10px">'+(s.lastBk?'آخر نسخة احتياطية: '+esc(fmtWhen(s.lastBk)):'لم تُنشأ نسخة احتياطية بعد')+(s.bkEmail?' • البريد: <span dir="ltr">'+esc(s.bkEmail)+'</span>':'')+(s.autoBk!==false?'<br>النسخ التلقائي مفعّل'+(s.lastAuto?' • آخرها: '+esc(fmtWhen(s.lastAuto)):''):'')+'</div><button class="btn wa big" style="margin-bottom:8px" data-a="waQuick">'+svg('wa',18)+' إرسال النسخة عبر واتساب</button><div class="row"><button class="btn sp" data-a="exportData">'+svg('arrow',16)+' نسخ احتياطي</button><button class="btn sp" data-a="importData">'+svg('clip',16)+' استعادة</button></div><button class="btn danger big" style="margin-top:10px" data-a="resetAll">حذف كل البيانات</button></div>';
  
- return '<h2 class="vt">الحساب</h2>'+'<div class="card"><div class="row"><div style="flex:1"><b>الجولة التعريفية</b><div class="mu sm">شرح سريع لأقسام التطبيق وطريقة استخدامه</div></div><button class="btn primary" data-a="tourStart">ابدأ</button></div></div>'+aiCard()+h;
+ return '<h2 class="vt">الحساب</h2>'+'<div class="card"><div class="row"><div style="flex:1"><b>التنقل بالإيماءات</b><div class="mu sm">السحب من الطرفين للرجوع، ومن الأسفل للأعلى للرئيسية</div></div><label class="sw"><input type="checkbox" data-c="gestTog"'+(S.settings.gest!==false?' checked':'')+'><span></span></label></div></div>'+'<div class="card"><div class="row"><div style="flex:1"><b>الجولة التعريفية</b><div class="mu sm">شرح سريع لأقسام التطبيق وطريقة استخدامه</div></div><button class="btn primary" data-a="tourStart">ابدأ</button></div></div>'+aiCard()+h;
 }
 function customView(){
  const s=S.settings;
@@ -2034,6 +2133,10 @@ const A={
  async secRemove(){const v=$('#sl-c').value;if(!v)return toast('أدخل الرمز');if((await hash('sec:'+v))!==S.settings.debtLock){toast('الرمز غير صحيح');$('#sl-c').value='';return}delete S.settings.debtLock;save();closeModal();render();toast('أُزيل قفل قسم الديون')},
  async secOpen(){const v=$('#sl-c').value;if(!v)return toast('أدخل الرمز');if((await hash('sec:'+v))!==S.settings.debtLock){toast('الرمز غير صحيح');$('#sl-c').value='';return}ui.unl._debts=true;closeModal();ui.view='debts';render()},
  async myResetSave(){const id=$('#mr-node').value,n=tnode('m',id);if(!n)return;if(S.settings.pinHash){const v=$('#mr-app').value;if((await hash(v))!==S.settings.pinHash){toast('رمز قفل التطبيق غير صحيح');return}}const a=$('#mr-a').value,b=$('#mr-b').value;if(!/^[0-9]{4,}$/.test(a))return toast('الرمز أرقام فقط، 4 خانات على الأقل');if(a!==b)return toast('الرمزان غير متطابقين');n.lockHash=await hash('bub:'+a);n.locked=true;delete ui.unl[id];save();closeModal();render();toast('عُيّن رمز جديد لـ «'+n.label+'»')},
+ ghClose(){const w=$('#ghint');if(w)w.className=''},
+ async waQuick(el){el.disabled=true;const old=el.innerHTML;el.textContent='جارٍ التجهيز...';try{const r=await waSend(S.settings.bkFiles!==false);S.settings.lastBk=Date.now();saveQ();if(r==='fallback')toast('حُفظ الملف في جهازك وفُتح واتساب، أرفقه في المحادثة')}catch(e){toast('تعذّر الإرسال: '+((e&&e.message)||''))}el.disabled=false;el.innerHTML=old},
+ async bkWa(el){el.disabled=true;const st=$('#bk-st');if(st)st.textContent='جارٍ تجهيز النسخة...';try{const r=await waSend($('#bk-files').checked);S.settings.lastBk=Date.now();saveQ();if(st)st.textContent=r==='wa'?'✓ فُتح واتساب والملف مرفق، اختر المحادثة':r==='share'?'✓ اختر واتساب من القائمة والملف مرفق':r==='fallback'?'✓ حُفظ الملف وفُتح واتساب، أرفق الملف في المحادثة':'أُلغيت المشاركة'}catch(e){if(st)st.textContent='تعذّر الإرسال: '+((e&&e.message)||'')}el.disabled=false},
+ async rsAuto(el){const b=await fget(el.dataset.k);if(!b)return toast('هذه النسخة غير متاحة');let p;try{p=parseBackup(await b.text())}catch(e){return toast('النسخة تالفة')}ask('استعادة النسخة التلقائية؟ ستحل محل بياناتك الحالية.',()=>applyRestore(p),'استعادة')},
  dwF(el){ui.dwF=el.dataset.v;render()},
  dwType(el){if(ui.dwEdit)schedAuto();const b=$('#d-type');b.dataset.v=el.dataset.v;b.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===el))},
  bubAdd(){const c=ui.view==='dawwin'?'d':ui.view==='mydata'?'m':'p',pa=c==='d'?ui.dwPath:c==='m'?ui.myPath:ui.path,par=pa.length?pa[pa.length-1]:'';if(c==='d')ui.dwOpen=true;else if(c==='m')ui.myOpen=true;else ui.open=true;branchModal(c,par)},
@@ -2150,6 +2253,8 @@ const CH={
  async rsFile(el){const f=el.files&&el.files[0];el.value='';if(!f)return;const info=$('#rs-info'),go=$('#rs-go');try{const p=parseBackup(await f.text());ui.bkPend=p;const d=p.data;info.style.display='';info.innerHTML='<div>'+svg('file',14)+' '+esc(f.name)+'</div>'+(p.created?'<div>'+svg('cal',14)+' تاريخ النسخة: '+esc(fmtWhen(Date.parse(p.created)))+'</div>':'')+'<div>'+svg('wallet',14)+' '+(d.history||[]).length+' عملية • '+(d.reminders||[]).length+' التزام • '+(d.debts||[]).length+' دين</div><div>'+svg('sparkle',14)+' '+((d.dawwin||{}).items||[]).length+' فكرة ومهمة • '+((d.mydata||{}).items||[]).length+' سجل في بياناتي • '+Object.keys(p.files||{}).length+' مرفق</div>';go.style.display=''}catch(e){ui.bkPend=null;info.style.display='';info.textContent='هذا الملف ليس نسخة احتياطية صالحة من دوّن.';go.style.display='none'}},
  selOther(el){const o=$('#cfo-'+el.id.slice(3));if(o){o.hidden=el.value!=='__other';if(!o.hidden)o.focus()}},
  colOther(el){const o=$('#d-colnew');if(o){o.hidden=el.value!=='__new';if(!o.hidden)o.focus()}},
+ gestTog(el){S.settings.gest=el.checked;save()},
+ autoBkTog(el){S.settings.autoBk=el.checked;saveQ();if(el.checked)autoBk();toast(el.checked?'النسخ التلقائي مفعّل':'أُوقف النسخ التلقائي')},
  dynTy(el){const d=ui.dyn;if(d){d.types=d.types||{};d.types[el.dataset.l]=el.value}},
  dsgTy(el){const d=ui.dsg;if(d&&d.cands[+el.dataset.i2]){d.cands[+el.dataset.i2].type=el.value;dsgRender()}},
  dsgOpts(el){const d=ui.dsg;if(d&&d.cands[+el.dataset.i2])d.cands[+el.dataset.i2].opts=parseNames(el.value)},
@@ -2216,7 +2321,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 try{if(!S.mydata)S.mydata={cols:defaultMy(),items:[]};if(!S.migMy){S.migMy=1;const used=new Set(S.history.map(h=>h.catId).concat(S.reminders.map(r=>r.catId)));const mv=S.categories.filter(n=>(isSecretName(n.label)||n.tpl==='secret')&&![...subIds(n)].some(id=>used.has(id)));if(mv.length){S.categories=S.categories.filter(n=>mv.indexOf(n)<0);mv.forEach(n=>{const i=S.mydata.cols.findIndex(c=>c.label===n.label);if(i>-1)S.mydata.cols[i]=n;else S.mydata.cols.push(n)});ui.migMsg='نُقلت '+mv.map(n=>'«'+n.label+'»').join('، ')+' إلى قسم بياناتي'}saveQ()}}catch(e){}
 if(!Array.isArray(S.debts))S.debts=[];
 if(!S.settings.lightV){S.settings.lightV=1;S.settings.theme='light';saveQ()}
-render();ticker();if(!S.settings.tourDone&&!ui.locked)setTimeout(tourStart,900);if(ui.migMsg)setTimeout(()=>toast(ui.migMsg),900);
+render();ticker();if(!S.settings.tourDone&&!ui.locked)setTimeout(tourStart,900);else if(!ui.locked)setTimeout(gestHint,1200);setTimeout(()=>{if(S.settings.autoBk!==false&&(!S.settings.lastAuto||Date.now()-S.settings.lastAuto>6*36e5))autoBk()},4000);if(ui.migMsg)setTimeout(()=>toast(ui.migMsg),900);
 })();
 </script>
 </body>
